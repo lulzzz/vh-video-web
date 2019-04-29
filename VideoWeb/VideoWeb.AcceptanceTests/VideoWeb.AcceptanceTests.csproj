@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SpecFlowObsoleteCodeBehindFiles Remove="Features\CameraWorking - Copy.feature.cs" />
-    <SpecFlowObsoleteCodeBehindFiles Remove="Features\SeeAndHearVideo - Copy.feature.cs" />
+    <Content Include="Features\*.feature" />
   </ItemGroup>
 
   <ItemGroup>

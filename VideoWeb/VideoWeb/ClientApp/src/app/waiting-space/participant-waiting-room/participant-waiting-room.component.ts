@@ -123,9 +123,10 @@ export class ParticipantWaitingRoomComponent implements OnInit {
     };
 
     this.pexipAPI.onConnect = function (stream) {
-      self.connected = true;
       console.info('successfully connected');
+      self.connected = true;
       self.stream = stream;
+      self.listTracks();
     };
 
     this.pexipAPI.onError = function (reason) {
@@ -144,10 +145,14 @@ export class ParticipantWaitingRoomComponent implements OnInit {
     const pexipNode = this.conference.pexip_node_uri;
     const conferenceAlias = this.conference.participant_uri;
     const displayName = this.participant.tiled_display_name;
-    this.pexipAPI.makeCall(pexipNode, conferenceAlias, displayName, null);
+    this.pexipAPI.makeCall(pexipNode, conferenceAlias, displayName, null, 'none');
   }
 
   showVideo(): boolean {
+    if (!this.stream) {
+      return false;
+    }
+
     if (!this.connected) {
       return false;
     }
@@ -159,5 +164,25 @@ export class ParticipantWaitingRoomComponent implements OnInit {
     if (this.participant.status === ParticipantStatus.InConsultation) {
       return true;
     }
+  }
+
+  listTracks() {
+    if (this.stream) {
+      const mediaStream: MediaStream = this.stream;
+      console.log(mediaStream);
+      mediaStream.getTracks().forEach((track) => {
+        console.log(track);
+      });
+    }
+  }
+
+  connectMicAndCameraToCall() {
+    this.pexipAPI.addCall(null);
+    this.listTracks();
+  }
+
+  disconnectMicAndCameraToCall() {
+    this.pexipAPI.disconnect();
+    this.call();
   }
 }
