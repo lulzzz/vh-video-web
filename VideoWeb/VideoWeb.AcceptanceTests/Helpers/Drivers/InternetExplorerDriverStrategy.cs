@@ -15,13 +15,15 @@ namespace VideoWeb.AcceptanceTests.Helpers.Drivers
 
         public override IWebDriver InitialiseForLocal()
         {
+            //var ieDriverService = InternetExplorerDriverService.CreateDefaultService(BuildPath, "IEDriverServer64.exe");
             var ieOptions = new InternetExplorerOptions
             {
                 IgnoreZoomLevel = true,
-                BrowserAttachTimeout = LocalTimeout,
-                IntroduceInstabilityByIgnoringProtectedModeSettings = true
+                BrowserAttachTimeout = LocalTimeout, 
+               // IntroduceInstabilityByIgnoringProtectedModeSettings = true
             };
             return new InternetExplorerDriver(BuildPath, ieOptions, LocalTimeout);
+            //return new InternetExplorerDriver(ieDriverService, ieOptions, LocalTimeout);
         }
     }
 }

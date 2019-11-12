@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Net;
 using FluentAssertions;
 using RestSharp;
@@ -103,10 +102,13 @@ namespace VideoWeb.AcceptanceTests.Steps
             if (_tc.TargetBrowser == TargetBrowser.Edge)
             {
                 _commonPages.PageUrl(Page.UnsupportedBrowser.Url);
+                _browsers[_tc.CurrentUser.Key].Driver.WaitUntilVisible(_errorPage.UnsupportedBrowserTitle)
+                    .Displayed.Should().BeTrue();
             }
             else
             {
-                _browsers[_tc.CurrentUser.Key].Driver.Url.Should().NotContain(Page.HearingList.Url);
+                _browsers[_tc.CurrentUser.Key].Driver.SwitchTo().DefaultContent();
+                _browsers[_tc.CurrentUser.Key].Driver.WrappedDriver.Url.Should().NotContain(Page.HearingList.Url);
             }
         }
     }

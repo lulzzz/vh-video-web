@@ -20,7 +20,7 @@ namespace VideoWeb.AcceptanceTests.Helpers.Drivers
         public override IWebDriver InitialiseForLocal()
         {
             var edgeDriverService = EdgeDriverService.CreateDefaultService(
-                BuildPath, "MicrosoftWebDriver.exe", 52296);
+                BuildPath, "MicrosoftWebDriver.exe", 9222);
             var edgeOptions = new EdgeOptions
             {
                 UnhandledPromptBehavior = UnhandledPromptBehavior.Accept,

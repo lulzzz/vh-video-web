@@ -40,13 +40,14 @@ namespace VideoWeb.AcceptanceTests.Helpers
             var buildName = Environment.GetEnvironmentVariable("Build_DefinitionName");
             var releaseName = Environment.GetEnvironmentVariable("RELEASE_RELEASENAME");
             var shortBuildName = buildName?.Replace("hmcts.vh-", "");
-
+            var tags = new List<string>(){_targetBrowser.ToString()};
             var sauceOptions = new Dictionary<string, object>
             {
                 {"username", _saucelabsSettings.Username},
                 {"accessKey", _saucelabsSettings.AccessKey},
                 {"name", _scenario.Title},
                 {"build", $"{shortBuildName} {releaseName} {_targetBrowser}"},
+                {"tags",  tags},
                 {"idleTimeout", SaucelabsIdleTimeoutInSeconds},
                 {"seleniumVersion", SauceLabSeleniumVersion},
                 {
