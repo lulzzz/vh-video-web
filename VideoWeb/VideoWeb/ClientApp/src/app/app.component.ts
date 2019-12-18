@@ -9,6 +9,8 @@ import { ErrorService } from './services/error.service';
 import { UserRole } from './services/clients/api-client';
 import { Title } from '@angular/platform-browser';
 import { filter, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { MsalService, BroadcastService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit {
   loggedIn: boolean;
   isRepresentativeOrIndividual: boolean;
   pageTitle = 'Video Hearings - ';
+  private subscription: Subscription;
   constructor(private adalService: AdalService,
     private configService: ConfigService,
     private router: Router,
@@ -34,7 +37,9 @@ export class AppComponent implements OnInit {
     private profileService: ProfileService,
     private errorService: ErrorService,
     private titleService: Title,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private msalSvc: MsalService,
+    private broadcastService: BroadcastService
   ) {
     this.loggedIn = false;
     this.isRepresentativeOrIndividual = false;
@@ -54,7 +59,16 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.checkBrowser();
-    this.checkAuth();
+    // this.checkAuth();
+    this.broadcastService.subscribe("msal:loginFailure", (payload) => {
+      console.log("login failure " + JSON.stringify(payload));
+      this.loggedIn = false;
+    });
+    this.broadcastService.subscribe("msal:loginSuccess", (payload) => {
+      console.log("login success " + JSON.stringify(payload));
+      this.loggedIn = true;
+    });
+    this.checkAuth2();
     this.setPageTitle();
     this.scrollToTop();
   }
@@ -70,6 +84,19 @@ export class AppComponent implements OnInit {
     if (window.location.pathname !== `/${PageUrls.Logout}`) {
       this.adalService.handleWindowCallback();
       this.loggedIn = this.adalService.userInfo.authenticated;
+      if (!this.loggedIn) {
+        this.router.navigate(['/login'], { queryParams: { returnUrl: currentUrl } });
+        return;
+      }
+      this.retrieveProfileRole();
+    }
+  }
+
+  checkAuth2(): void {
+    const currentUrl = window.location.href;
+
+    if (window.location.pathname !== `/${PageUrls.Logout}`) {
+      this.loggedIn = this.msalSvc._oauthData.isAuthenticated;
       if (!this.loggedIn) {
         this.router.navigate(['/login'], { queryParams: { returnUrl: currentUrl } });
         return;
@@ -123,5 +150,12 @@ export class AppComponent implements OnInit {
       window.scroll(0, 0);
       this.skipLinkDiv.nativeElement.focus();
     });
+  }
+
+  ngOnDestroy() {
+    this.broadcastService.getMSALSubject().next(1);
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

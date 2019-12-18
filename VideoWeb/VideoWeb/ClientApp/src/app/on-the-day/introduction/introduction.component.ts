@@ -7,6 +7,7 @@ import {
 } from 'src/app/services/clients/api-client';
 import { AdalService } from 'adal-angular4';
 import { ErrorService } from 'src/app/services/error.service';
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-introduction',
@@ -23,7 +24,8 @@ export class IntroductionComponent implements OnInit {
     private route: ActivatedRoute,
     private videoWebService: VideoWebService,
     private adalService: AdalService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private msalService: MsalService
   ) { }
 
   ngOnInit() {
@@ -37,11 +39,11 @@ export class IntroductionComponent implements OnInit {
         this.conference = conference;
         this.postParticipantJoiningStatus();
       },
-      (error) => {
-        if (!this.errorService.returnHomeIfUnauthorised(error)) {
-          this.errorService.handleApiError(error);
-        }
-      });
+        (error) => {
+          if (!this.errorService.returnHomeIfUnauthorised(error)) {
+            this.errorService.handleApiError(error);
+          }
+        });
   }
 
   goToEquipmentCheck() {
@@ -49,8 +51,10 @@ export class IntroductionComponent implements OnInit {
   }
 
   postParticipantJoiningStatus() {
+    /*     const participant = this.conference.participants.
+          find(x => x.username.toLocaleLowerCase() === this.adalService.userInfo.userName.toLocaleLowerCase()); */
     const participant = this.conference.participants.
-      find(x => x.username.toLocaleLowerCase() === this.adalService.userInfo.userName.toLocaleLowerCase());
+      find(x => x.username.toLocaleLowerCase() === this.msalService._oauthData.userName.toLocaleLowerCase());
     this.videoWebService.raiseParticipantEvent(this.conference.id,
       new UpdateParticipantStatusEventRequest({
         participant_id: participant.id.toString()

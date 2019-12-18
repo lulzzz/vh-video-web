@@ -27,7 +27,8 @@
     "@angular/platform-server": "^7.1.0",
     "@angular/router": "^7.1.0",
     "@aspnet/signalr": "^1.1.4",
-    "@hmcts/frontend": "^0.0.39-alpha",
+    "@azure/msal-angular": "^0.1.4",
+    "@hmcts/frontend": "^0.0.41-alpha",
     "@nguniversal/module-map-ngfactory-loader": "7.1.0",
     "@types/jquery": "^3.3.31",
     "@types/webrtc": "0.0.25",
@@ -48,9 +49,10 @@
     "ngx-moment": "^3.5.0",
     "popper.js": "^1.16.0",
     "rxjs": "^6.5.3",
+    "rxjs-compat": "^6.5.3",
+    "snyk": "^1.259.0",
     "webrtc-adapter": "^7.3.0",
-    "zone.js": "^0.8.29",
-    "snyk": "^1.259.0"
+    "zone.js": "^0.8.29"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.9",
@@ -67,7 +69,7 @@
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "~1.4.2",
+    "karma-coverage-istanbul-reporter": "~2.1.1",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-junit-reporter": "^1.2.0",

@@ -19,6 +19,7 @@ import { LOG_ADAPTER, LoggerService } from './services/logging/logger.service';
 import { ConsoleLogger } from './services/logging/loggers/console-logger';
 import { AppInsightsLoggerService } from './services/logging/loggers/app-insights-logger.service';
 import { Logger } from './services/logging/logger-base';
+import { MsalModule, MsalInterceptor, MsalService, MsalGuard } from '@azure/msal-angular';
 
 export function getSettings(configService: ConfigService) {
   return () => configService.loadConfig();
@@ -38,11 +39,15 @@ export function getSettings(configService: ConfigService) {
     SecurityModule,
     WaitingSpaceModule,
     OnTheDayModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MsalModule.forRoot({
+      clientID: "7a00ed39-469b-4cc6-a1aa-2d7b32c0eed2"
+    })
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: getSettings, deps: [ConfigService], multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AdalInterceptor, multi: true },
+    /* { provide: HTTP_INTERCEPTORS, useClass: AdalInterceptor, multi: true }, */
+    { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
     { provide: Logger, useClass: LoggerService },
     { provide: LOG_ADAPTER, useClass: ConsoleLogger, multi: true },
     { provide: LOG_ADAPTER, useClass: AppInsightsLoggerService, multi: true },
@@ -51,7 +56,9 @@ export function getSettings(configService: ConfigService) {
     AdalGuard,
     ConfigService,
     AuthGuard,
-    Title
+    Title,
+    MsalService,
+    MsalGuard
   ],
   bootstrap: [AppComponent]
 })
