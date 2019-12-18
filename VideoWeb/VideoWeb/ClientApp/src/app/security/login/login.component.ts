@@ -3,6 +3,7 @@ import { OnInit, Component, Injectable } from '@angular/core';
 import { AdalService } from 'adal-angular4';
 import { ReturnUrlService } from '../../services/return-url.service';
 import { Logger } from '../../services/logging/logger-base';
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +13,11 @@ import { Logger } from '../../services/logging/logger-base';
 @Injectable()
 export class LoginComponent implements OnInit {
   constructor(private adalSvc: AdalService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private returnUrlService: ReturnUrlService,
-              private logger: Logger) {
+    private route: ActivatedRoute,
+    private router: Router,
+    private returnUrlService: ReturnUrlService,
+    private logger: Logger,
+    private msalSvc: MsalService, ) {
   }
 
   ngOnInit() {
@@ -23,7 +25,8 @@ export class LoginComponent implements OnInit {
   }
 
   private async checkAuthAndRedirect() {
-    if (this.adalSvc.userInfo.authenticated) {
+    /* if (this.adalSvc.userInfo.authenticated) { */
+    if (this.msalSvc._oauthData.isAuthenticated) {
       const returnUrl = this.returnUrlService.popUrl() || '/';
       try {
         await this.router.navigateByUrl(returnUrl);
@@ -34,7 +37,8 @@ export class LoginComponent implements OnInit {
     } else {
       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
       this.returnUrlService.setUrl(returnUrl);
-      this.adalSvc.login();
+      // this.adalSvc.login();
+      this.msalSvc.loginPopup();
     }
   }
 }

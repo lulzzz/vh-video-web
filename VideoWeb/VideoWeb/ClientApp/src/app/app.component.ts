@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AdalService } from 'adal-angular4';
 import { ConfigService } from './services/api/config.service';
@@ -18,7 +18,7 @@ import { MsalService, BroadcastService } from '@azure/msal-angular';
   styleUrls: ['./app.component.scss']
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('maincontent')
   main: ElementRef;
@@ -60,14 +60,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.checkBrowser();
     // this.checkAuth();
-    this.broadcastService.subscribe("msal:loginFailure", (payload) => {
-      console.log("login failure " + JSON.stringify(payload));
-      this.loggedIn = false;
-    });
-    this.broadcastService.subscribe("msal:loginSuccess", (payload) => {
-      console.log("login success " + JSON.stringify(payload));
-      this.loggedIn = true;
-    });
     this.checkAuth2();
     this.setPageTitle();
     this.scrollToTop();
@@ -94,7 +86,14 @@ export class AppComponent implements OnInit {
 
   checkAuth2(): void {
     const currentUrl = window.location.href;
-
+    this.broadcastService.subscribe('msal:loginFailure', (payload) => {
+      console.log('login failure ' + JSON.stringify(payload));
+      this.loggedIn = false;
+    });
+    this.broadcastService.subscribe('msal:loginSuccess', (payload) => {
+      console.log('login success ' + JSON.stringify(payload));
+      this.loggedIn = true;
+    });
     if (window.location.pathname !== `/${PageUrls.Logout}`) {
       this.loggedIn = this.msalSvc._oauthData.isAuthenticated;
       if (!this.loggedIn) {

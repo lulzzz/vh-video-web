@@ -41,7 +41,7 @@ export function getSettings(configService: ConfigService) {
     OnTheDayModule,
     AppRoutingModule,
     MsalModule.forRoot({
-      clientID: "7a00ed39-469b-4cc6-a1aa-2d7b32c0eed2"
+      clientID: '7a00ed39-469b-4cc6-a1aa-2d7b32c0eed2'
     })
   ],
   providers: [
