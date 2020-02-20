@@ -14,9 +14,14 @@ export class VhoHearingListComponent implements OnInit {
   @Output() selectedConference = new EventEmitter<ConferenceForUserResponse>();
   currentConference: ConferenceForUserResponse;
 
+  displayGraph = false;
+  packageLostArray = Array.from(Array(180), () => Math.floor(5 * Math.random() * 10));
+  selectedParticipantName: string;
+
   constructor(private clipboardService: ClipboardService) { }
 
   ngOnInit() {
+    this.setTestData();
   }
 
   isCurrentConference(conference: ConferenceForUserResponse): boolean {
@@ -78,5 +83,23 @@ export class VhoHearingListComponent implements OnInit {
 
   copyToClipboard(conference: ConferenceForUserResponse) {
     this.clipboardService.copyFromContent(conference.id);
+  }
+
+  showMonitoringGraph() {
+    this.displayGraph = !this.displayGraph;
+    this.selectedParticipantName = 'Ms Steve Adams';
+  }
+
+  setTestData() {
+    for (var i = 0; i < 180; i++) {
+      if (i < 100) {
+        this.packageLostArray[i] = 5;
+      }
+
+      if (i > 170) {
+        this.packageLostArray[i] = 1;
+
+      }
+    }
   }
 }

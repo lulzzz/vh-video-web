@@ -10,6 +10,8 @@ import { VhOfficerRoutingModule } from './vh-officer-routing.module';
 import { ClipboardModule } from 'ngx-clipboard';
 import { VhoHearingsFilterComponent } from '../vh-officer/vho-herings-filter/vho-hearings-filter.component';
 import { HearingsFilterOptionsService } from '../vh-officer/services/hearings-filter-options.service';
+import { MonitoringGraphComponent } from '../vh-officer/monitoring-graph/monitoring-graph.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -18,13 +20,15 @@ import { HearingsFilterOptionsService } from '../vh-officer/services/hearings-fi
     VhoHearingListComponent,
     ParticipantStatusComponent,
     ParticipantInfoTooltipComponent,
-    VhoHearingsFilterComponent
+    VhoHearingsFilterComponent,
+    MonitoringGraphComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     ClipboardModule,
-    VhOfficerRoutingModule
+    VhOfficerRoutingModule,
+    ChartsModule
     ],
     providers: [
         HearingsFilterOptionsService
