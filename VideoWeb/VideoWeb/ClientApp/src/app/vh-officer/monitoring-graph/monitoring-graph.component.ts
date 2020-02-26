@@ -20,9 +20,14 @@ export class MonitoringGraphComponent implements OnInit {
   packagesLostValues: number[] = [];
   lineChartData: ChartDataSets[] = [];
   lineChartLabels: Label[] = [];
-  lastPoint: number;
+  lineChartLegend = false;
+  lineChartType = 'line';
+  lineChartPlugins = [];
 
-  public lineChartOptions = {
+  lastPoint: number
+  MAX_RECORDS = 180;
+
+  lineChartOptions = {
     scales: {
       yAxes: [{
         ticks: {
@@ -39,7 +44,7 @@ export class MonitoringGraphComponent implements OnInit {
       xAxes: [{
         ticks: {
           suggestedMin: 0,
-          suggestedMax: 180,
+          suggestedMax: this.MAX_RECORDS,
           display: false,
         },
         scaleLabel: {
@@ -59,7 +64,8 @@ export class MonitoringGraphComponent implements OnInit {
     }
 
   };
-  public lineChartColors: Color[] = [
+
+  lineChartColors: Color[] = [
     {
       borderColor: '#ffab00',
       backgroundColor: 'rgba(0,0,0,0)',
@@ -76,18 +82,13 @@ export class MonitoringGraphComponent implements OnInit {
       borderWidth: 1
     },
   ];
-  public lineChartLegend = false;
-  public lineChartType = 'line';
-  public lineChartPlugins = [];
-
-  constructor() { }
 
   ngOnInit() {
-    this.lineChartData.push({ data: Array.from(Array(180), () => 90), label: 'Poor' });
-    this.lineChartData.push({ data: Array.from(Array(180), () => 75), label: 'Bad' });
+    this.lineChartData.push({ data: Array.from(Array(this.MAX_RECORDS), () => 90), label: 'Poor' });
+    this.lineChartData.push({ data: Array.from(Array(this.MAX_RECORDS), () => 75), label: 'Bad' });
     this.lineChartData.push({ data: this.packagesLostValues, label: 'Signal' });
 
-    this.lineChartLabels = Array.from(Array(180), (item, index) => index.toString());
+    this.lineChartLabels = Array.from(Array(this.MAX_RECORDS), (item, index) => index.toString());
 
   }
 
@@ -102,10 +103,10 @@ export class MonitoringGraphComponent implements OnInit {
   }
 
   get lastPackageLostValue() {
-    if (this.lastPoint < 0) { return 'disconnected';}
+    if (this.lastPoint >=100) { return 'disconnected';}
     if (this.lastPoint >= 10 && this.lastPoint < 15) {
       return 'poor';
-    } else if (this.lastPoint >= 15) {
+    } else if (this.lastPoint >= 15 && this.lastPoint < 100) {
       return 'bad';
     }
     return 'good';

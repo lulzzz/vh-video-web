@@ -95,11 +95,16 @@ export class VhoHearingListComponent implements OnInit {
       if (i < 100) {
         this.packageLostArray[i] = 5;
       }
-
-      if (i > 170) {
-        this.packageLostArray[i] = 1;
-
+      if (i > 60 && i < 80) {
+        this.packageLostArray[i] = 100;
       }
+      if (i > 170 && i < 177) {
+        this.packageLostArray[i] = 1;
+      }
+      if (i > 177) {
+        this.packageLostArray[i] = 100;
+      }
+
     }
   }
 }

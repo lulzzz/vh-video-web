@@ -20,7 +20,7 @@
         </canvas>
       </div>
     </div>
-    <div class="govuk-grid-row graph-panel"
+    <div class="govuk-grid-row graph-panel" style="position:absolute; bottom:0%; width:100%;"
          [ngClass]="{'graph-footer-yellow':lastPackageLostValue === 'poor',
          'graph-footer-green':lastPackageLostValue === 'good',
          'graph-footer-red':lastPackageLostValue === 'bad',
