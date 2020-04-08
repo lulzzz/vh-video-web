@@ -9,6 +9,9 @@ export class ProfileService {
 
     constructor(private apiClient: ApiClient) {}
 
+    // INFO
+    //  getUserProfile() is called fromApp.component & then from home component - each can be 500ms = 1sec
+    //  cache the userProfile on the server by jwt token... please see server for more details
     async getUserProfile(): Promise<UserProfileResponse> {
         if (!this.profile) {
             this.profile = await this.apiClient.getUserProfile().toPromise();

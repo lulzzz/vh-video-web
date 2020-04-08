@@ -32,6 +32,15 @@ namespace VideoWeb.Controllers
         [ProducesResponseType(typeof(UserProfileResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUserProfileAsync()
         {
+            // INFO
+            //    We can map the (UserProfileResponse) properties to user claims and cache it by JWT token
+            //    i.e every time user logs on, we cache in Redis the UserProfileResponse, which is mapped to the user claims
+            //    This means as the user logins in for that specifed 1 hour timeframe, 
+            //    all pages views that require the profile will call this BFF endpoint, and the profile is retrieved by
+            //    the JWT token provided. (User.Claims)
+            //    This will be implemented in the startup.cs on the AddJwtBearer -> options.Events => OnTokenValidated,
+            //    and refreshing the profile is a matter of just logging out and in again as they will have a new jwt token
+            
             var username = User.Identity.Name.ToLower().Trim();
             try
             {

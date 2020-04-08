@@ -30,6 +30,9 @@ namespace VideoWeb.Controllers
         {
             try
             {
+                // INFO
+                // 1) May be faster to change the query in API to get just the Tasks domain objects
+                //     directly instead of getting the _context.Conferences.Include(x => x.Tasks)
                 var tasks = await _videoApiClient.GetTasksForConferenceAsync(conferenceId);
                 return Ok(tasks);
             }

@@ -21,6 +21,9 @@ namespace VideoWeb.Mappings
 
             conference.Participants ??= new List<ParticipantDetailsResponse>();
 
+            // INFO
+            //    If booking participant details are relly needed, the VideoDb should contain them instead of wasting 
+            //    time calling Booking api
             var participants = conference.Participants
                 .OrderBy(x => x.Case_type_group)
                 .Select(x =>

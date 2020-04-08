@@ -107,7 +107,14 @@ namespace VideoWeb.Controllers
         [SwaggerOperation(OperationId = "GetConferencesForVhOfficer")]
         public async Task<ActionResult<List<ConferenceForVhOfficerResponse>>> GetConferencesForVhOfficerAsync()
         {
+            // INFO
+            //     Gets the list for the conference onInit for the Vho-Hearings component Every 30 Seconds
             _logger.LogDebug("GetConferencesForVhOfficer");
+            
+            //INFO
+            //    cache the profile response as the Graph Api is called with 2 calls in UserApi (GET user,groups)
+            //     Should be either local Memory or Redis, with sliding Experation while the VHO uses the page
+            //     Extract this try/catch into a method
             try
             {
                 var username = User.Identity.Name.ToLower().Trim();
@@ -126,6 +133,11 @@ namespace VideoWeb.Controllers
 
             try
             {
+                // INFO
+                // Having 1000 hearing on the VHO screen will mean that initial call will bring back 1000 hearing,
+                //    we need to filter them so as to not fetch 1000 hearings, i.e. have a default filter set, change call to get conferences to actually
+                //    return filtered conferences from source (filtering currently done on client by hiding/showing)
+                // Remove the ToList() below
                 var conferences = await _videoApiClient.GetConferencesTodayForAdminAsync();
                 conferences = conferences.Where(c => ConferenceHelper.HasNotPassed(c.Status, c.Closed_date_time)).ToList();
                 conferences = conferences.OrderBy(x => x.Closed_date_time).ToList();
@@ -149,6 +161,13 @@ namespace VideoWeb.Controllers
                 return ConferenceForVhOfficerResponseMapper.MapConferenceSummaryToResponseModel(conference, null);
             }
 
+            // INFO
+            // 1) May be faster to change the query in API to get just the InstantMessageHistory domain objects
+            //     directly instead of getting the _context.Conferences.Include(x => x.InstantMessageHistory)
+            // 2) the retrieveHearingsForVhOfficer() gets all the conferences, but below will call to get IM 1 by 1, 
+            //    so maybe better to take the time hit to get IM's from the original GetConferencesTodayForAdminAsync() call to the API
+            //    as doing multiple calls for will add to time.
+            
             var messages = await _videoApiClient.GetInstantMessageHistoryAsync(conference.Id);
 
             return ConferenceForVhOfficerResponseMapper.MapConferenceSummaryToResponseModel(conference, messages);
@@ -186,6 +205,8 @@ namespace VideoWeb.Controllers
             try
             {
                 _logger.LogTrace("Checking to see if user is a VH Officer");
+                // INFO 
+                //    Using the claims that are stored from the JWT method, can save 500 ms
                 var profile = await _userApiClient.GetUserByAdUserNameAsync(username);
                 var profileResponse = UserProfileResponseMapper.MapToResponseModel(profile);
 
@@ -205,6 +226,8 @@ namespace VideoWeb.Controllers
             try
             {
                 _logger.LogTrace($"Retrieving conference details for conference: ${conferenceId}");
+                // INFO
+                //    get from cache ? 
                 conference = await _videoApiClient.GetConferenceDetailsByIdAsync(conferenceId);
             }
             catch (VideoApiException e)
@@ -222,6 +245,8 @@ namespace VideoWeb.Controllers
                 return Unauthorized();
             }
 
+            // INFO
+            //    Why do a booking participants to Video participants check ? is it really necessary?
             var bookingParticipants = new List<BookingParticipant>();
             try
             {
@@ -261,6 +286,8 @@ namespace VideoWeb.Controllers
 
             var response =
                 ConferenceResponseVhoMapper.MapConferenceDetailsToResponseModel(conference, bookingParticipants);
+            // INFO
+            //    Conference added but not retrieved in this method GetConferenceByIdVHOAsync()
             await _conferenceCache.AddConferenceToCache(conference);
 
             return Ok(response);
@@ -292,6 +319,8 @@ namespace VideoWeb.Controllers
             try
             {
                 _logger.LogTrace($"Retrieving conference details for conference: ${conferenceId}");
+                // INFO
+                //    get from cache ? 
                 conference = await _videoApiClient.GetConferenceDetailsByIdAsync(conferenceId);
             }
             catch (VideoApiException e)
@@ -320,6 +349,8 @@ namespace VideoWeb.Controllers
                 .Where(x => displayRoles.Contains((Role)x.User_role)).ToList();
 
             var response = ConferenceResponseMapper.MapConferenceDetailsToResponseModel(conference);
+            // INFO
+            //    Conference added but not retrieved in this method GetConferenceByIdAsync()
             await _conferenceCache.AddConferenceToCache(conference);
 
             return Ok(response);
