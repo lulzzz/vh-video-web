@@ -4,6 +4,14 @@
             "label": "build",
             "command": "dotnet",
             "type": "process",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": false,
+                "clear": true
+            },
             "args": [
                 "build",
                 "${workspaceFolder}/VideoWeb/VideoWeb/VideoWeb.csproj",
@@ -43,6 +51,52 @@
             "script": "install",
             "path": "${workspaceFolder}/VideoWeb/VideoWeb/ClientApp/",
             "problemMatcher": []
+        },
+        {
+            "label": "ng serve",
+            "type": "npm",
+            "script": "start",
+            "path": "${workspaceFolder}/VideoWeb/VideoWeb/ClientApp",
+            "options": {
+                "cwd": "${workspaceFolder}/VideoWeb/VideoWeb/ClientApp"
+            },
+            "isBackground": true,
+            "presentation": {
+                "focus": true,
+                "panel": "new",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "typescript",
+                "source": "ts",
+                "applyTo": "closedDocuments",
+                "fileLocation": [
+                    "relative",
+                    "${cwd}"
+                ],
+                "pattern": "$tsc",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": {
+                        "regexp": "(.*?)"
+                    },
+                    "endsPattern": {
+                        "regexp": "Compiled |Failed to compile."
+                    }
+                }
+            }
+        },
+        {
+            "label": "SPA Build",
+            "dependsOn": [
+                "build",
+                "ng serve"
+            ]
         }
     ]
 }
