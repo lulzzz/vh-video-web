@@ -1,7 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [{
-            "name": ".NET Core Launch (full)",
+            "name": ".NET Core Launch",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -19,14 +19,10 @@
             },
             "sourceFileMap": {
                 "/Pages": "${workspaceFolder}/VideoWeb/VideoWeb/Pages"
-            },
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "Now listening on",
-                "uriFormat": "https://localhost:5800",
             }
         },
         {
+            "name": "Ng App",
             "type": "chrome",
             "preLaunchTask": "ng serve",
             "serverReadyAction": {
@@ -34,13 +30,13 @@
                 "pattern": "Angular Live Development Server is listening on localhost:4200",
             },
             "request": "launch",
-            "name": "Chrome",
             "url": "https://localhost:5800",
-            "webRoot": "${workspaceFolder}/VideoWeb/VideoWeb/ClientApp"
+            "webRoot": "${workspaceFolder}/VideoWeb/VideoWeb/ClientApp",
+
         }
     ],
     "compounds": [{
         "name": "Full stack",
-        "configurations": [".NET Core Launch (full)", "Chrome"]
+        "configurations": [".NET Core Launch", "Ng App"]
     }]
 }

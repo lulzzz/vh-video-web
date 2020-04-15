@@ -6,9 +6,9 @@
             "type": "process",
             "presentation": {
                 "echo": true,
-                "reveal": "always",
+                "reveal": "silent",
                 "focus": false,
-                "panel": "new",
+                "panel": "dedicated",
                 "showReuseMessage": false,
                 "clear": true
             },
@@ -63,7 +63,7 @@
             "isBackground": true,
             "presentation": {
                 "focus": true,
-                "panel": "new",
+                "panel": "dedicated",
                 "clear": true,
                 "showReuseMessage": false
             },
