@@ -64,6 +64,7 @@
             clearInterval(this.timer);
             this.postponer = null;
             this.timer = null;
+            this.callback = null;
         } else {
             console.warn('Can not kill heartbeat.');
         }
