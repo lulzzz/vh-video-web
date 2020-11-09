@@ -382,7 +382,6 @@ export abstract class WaitingRoomBaseComponent {
             this.logger.debug(`[WR] - Stopping heartbeat`, { conference: this.conference.id, participant: this.participant.id });
             this.heartbeat.kill();
         }
-        this.heartbeat = undefined;
     }
 
     handleConferenceStatusChange(message: ConferenceStatusMessage) {
